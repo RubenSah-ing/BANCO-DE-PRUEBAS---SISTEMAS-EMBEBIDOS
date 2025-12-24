@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Banco de Pruebas</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f7fa;
+    padding: 20px;
+}
+
+h1 { color: #003366; }
+
+.card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+label { font-weight: bold; }
+
+input {
+    width: 100%;
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button.danger { background-color: #cc0000; }
+</style>
+</head>
+
+<body>
+
+<h1>Banco de Pruebas</h1>
+
+<form id="testForm">
+
+<!-- HELICE -->
+<div class="card">
+<h3>Parámetros de la hélice</h3>
+<div class="grid">
+<input name="propName" placeholder="Modelo">
+<input name="pitch" type="number" placeholder="Paso">
+<input name="diameter" type="number" placeholder="Diámetro">
+</div>
+</div>
+
+<!-- MOTOR -->
+<div class="card">
+<h3>Parámetros del motor</h3>
+<div class="grid">
+<input name="motorName" placeholder="Modelo">
+<input name="voltage" type="number" placeholder="Voltaje">
+<input name="kv" type="number" placeholder="KV">
+<input name="maxCurrent" type="number" placeholder="Corriente Máx">
+</div>
+</div>
+
+<!-- ENSAYO -->
+<div class="card">
+<h3>Parámetros del ensayo</h3>
+<div class="grid">
+<input name="testName" placeholder="Nombre ensayo">
+<input name="step" type="number" placeholder="N° pasos">
+<input name="vel_init" type="number" placeholder="Vel inicio">
+<input name="stepTime" type="number" placeholder="Duración">
+<input name="vel_last" type="number" placeholder="Vel fin">
+<input name="cicles" type="number" placeholder="Vueltas">
+</div>
+
+<h4>Variables a medir</h4>
+<label><input type="checkbox" name="measure_rpm"> RPM</label>
+<label><input type="checkbox" name="measure_thrust"> Empuje</label>
+<label><input type="checkbox" name="measure_torque"> Par</label>
+<label><input type="checkbox" name="measure_current"> Corriente</label>
+</div>
+
+<!-- CELDAS -->
+<div class="card">
+<h3>Celdas de carga</h3>
+<input name="weight" type="number" placeholder="Peso (g)">
+<br>
+<button type="button" onclick="sendAction('tare')">Tarar</button>
+<button type="button" onclick="sendAction('calibrate')">Calibrar</button>
+</div>
+
+<!-- CONTROL -->
+<div class="card">
+<button type="button" onclick="sendAction('start')">Iniciar Ensayo</button>
+<button type="button" class="danger" onclick="sendAction('stop')">Detener Ensayo</button>
+</div>
+
+</form>
+
+<!-- GRAFICO -->
+<script>
+function sendAction(action) {
+    const form = document.getElementById('testForm');
+    const data = new FormData(form);
+    data.append("action", action);
+
+    fetch("/", {
+        method: "POST",
+        body: new URLSearchParams(data)
+    });
+}
+</script>
+
+</body>
+</html>
